@@ -11,13 +11,14 @@ GLfloat ox_rotation = 0;  //  for oct rotation
 GLfloat dx_rotation = 0.5;
 GLfloat oy_rotation = 0;
 GLfloat dy_rotation = 0;
-
+GLuint cube;
 GLfloat light_pos [] = {0, 0, 0, 1};
 bool light_on = true;
 GLfloat sun_rotation = 1;
 GLfloat dx_sun_rotation = 1;
 int sun_mode = 1;
 bool visibility = true;
+bool cube_flag = false;
 
 GLint opened = 0;
 
@@ -34,11 +35,13 @@ void Draw () {
 				glDepthMask(GL_TRUE);
 				glDisable(GL_BLEND);
 			}
+    if (cube_flag)
+        glCallList(cube);        
     //  Light and sphere
     glLoadIdentity();
-    glTranslatef (0, 0, -25 );
+    glTranslatef (0, 0, -12);
     glRotatef((sun_rotation), 0, 1, 0);
-    glTranslatef (0, 0, -20);
+    glTranslatef (0, 0, -10);
     glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
 
     GLUquadricObj *quadObj;
@@ -49,7 +52,7 @@ void Draw () {
 
     //  Oct
     glLoadIdentity();
-    glTranslatef (0, 0, -20);
+    glTranslatef (0, 0, -5);
     glRotatef((ox_rotation), 0, 1, 0);
     glRotatef((oy_rotation), 1, 0, 0);
 	
@@ -58,67 +61,93 @@ void Draw () {
     glNormal3d(-1, -1, 1);
     //  (1, 1, -1)
 	glTexCoord2f(0.5f, 1.0f);
-    glVertex3f(0+opened, 10+opened, 0-opened);
+    glVertex3f(0+opened, 2+opened, 0-opened);
 	glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(0+opened, 0+opened, -10-opened);
+    glVertex3f(0+opened, 0+opened, -2-opened);
 	glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(10+opened, 0+opened, 0-opened);
+    glVertex3f(2+opened, 0+opened, 0-opened);
 
     glColor4f(1.0, 0.0, 0.0,0.5);  ///134 - red
     glNormal3d(-1, -1, -1);
     //  (1, 1, 1)
-    glVertex3f(0+opened, 10+opened, 0+opened);
-    glVertex3f(10+opened, 0+opened, 0+opened);
-    glVertex3f(0+opened, 0+opened, 10+opened);
+    glVertex3f(0+opened, 2+opened, 0+opened);
+    glVertex3f(2+opened, 0+opened, 0+opened);
+    glVertex3f(0+opened, 0+opened, 2+opened);
 
     glColor4f(0.0, 0.0, 1.0, 0.5);  /// 145 - blue
     glNormal3d(1, -1, -1);
     //  (-1, 1, 1)
-    glVertex3f(0-opened, 10+opened, 0+opened);
-    glVertex3f(0-opened, 0+opened, 10+opened);
-    glVertex3f(-10-opened, 0+opened, 0+opened);
+    glVertex3f(0-opened, 2+opened, 0+opened);
+    glVertex3f(0-opened, 0+opened, 2+opened);
+    glVertex3f(-2-opened, 0+opened, 0+opened);
 
     glColor4f(0.0, 1.0, 1.0, 0.5);  /// 236 - light blue
     glNormal3d(1, -1, -1);
     //  (1, -1, -1)
-    glVertex3f(0+opened, 0-opened, -10-opened);
-    glVertex3f(10+opened, 0-opened, 0-opened);
-    glVertex3f(0+opened, -10-opened, 0-opened);
+    glVertex3f(0+opened, 0-opened, -2-opened);
+    glVertex3f(2+opened, 0-opened, 0-opened);
+    glVertex3f(0+opened, -2-opened, 0-opened);
 
     glColor4f(1.0, 1.0, 0.0, 0.5);  /// 346 - yellow
     glNormal3d(-1, 1, -1);
     // (1, -1, 1)
-    glVertex3f(0+opened, 0-opened, 10+opened);
-    glVertex3f(10+opened, 0-opened, 0+opened);
-    glVertex3f(0+opened, -10-opened, 0+opened);
+    glVertex3f(0+opened, 0-opened, 2+opened);
+    glVertex3f(2+opened, 0-opened, 0+opened);
+    glVertex3f(0+opened, -2-opened, 0+opened);
 
     glColor4f(1.0, 0.0, 1.0, 0.5);  /// 456 - purple
     glNormal3d(-1, -1, 1);
     //  (-1, -1, 1)
-    glVertex3f(0-opened, 0-opened, 10+opened);
-    glVertex3f(-10-opened, 0-opened, 0+opened);
-    glVertex3f(0-opened, -10-opened, 0+opened);
+    glVertex3f(0-opened, 0-opened, 2+opened);
+    glVertex3f(-2-opened, 0-opened, 0+opened);
+    glVertex3f(0-opened, -2-opened, 0+opened);
 
     glColor4f(1.0, 0.5, 0.0, 0.5);  /// 125 - orange
     glNormal3d(-1, 1, -1);
     //  (-1, 1, -1)
-    glVertex3f(0-opened, 10+opened, 0-opened);
-    glVertex3f(0-opened, 0+opened, -10-opened);
-    glVertex3f(-10-opened, 0+opened, 0-opened);
+    glVertex3f(0-opened, 2+opened, 0-opened);
+    glVertex3f(0-opened, 0+opened, -2-opened);
+    glVertex3f(-2-opened, 0+opened, 0-opened);
 
     glColor4f(1.0, 0.0, 0.0, 0.5);  /// 256 - rgb
     glNormal3d(1, 1, 1);
     //  (-1, -1, -1)
-    glVertex3f(0-opened, 0-opened, -10-opened);
+    glVertex3f(0-opened, 0-opened, -2-opened);
     glColor4f(0.0, 1.0, 0.0, 0.5);
-    glVertex3f(-10-opened, 0-opened, 0-opened);
+    glVertex3f(-2-opened, 0-opened, 0-opened);
     glColor4f(0.0, 0.0, 1.0, 0.5);
-    glVertex3f(0-opened, -10-opened, 0-opened);
+    glVertex3f(0-opened, -2-opened, 0-opened);
 
     glEnd();
     glutSwapBuffers();
 }
 
+void draw_cube() {
+    glColor4f(1.0, 0, 1.0, 1.0);
+    glNewList(cube, GL_COMPILE);
+        for(int i = 0; i < 31; i++) {
+                glBegin(GL_LINE_LOOP);
+                    glVertex3f(-20, 20 - i * 1.5, 20);
+                    glVertex3f(20, 20 - i * 1.5, 20);
+                    glVertex3f(20, 20 - i * 1.5, -20);
+                    glVertex3f(-20, 20 - i * 1.5, -20);
+                glEnd();
+                glBegin(GL_LINE_LOOP);
+                    glVertex3f(20 - i * 1.5, 20, 20);
+                    glVertex3f(20 - i * 1.5, -20, 20);
+                    glVertex3f(20 - i * 1.5, -20, -20);
+                    glVertex3f(20 - i * 1.5, 20, -20);
+                glEnd();
+                glBegin(GL_LINE_LOOP);
+                    glVertex3f(-20, 20, 20 - i * 1.5);
+                    glVertex3f(20, 20, 20 - i * 1.5);
+                    glVertex3f(20, -20, 20 - i * 1.5);
+                    glVertex3f(-20, -20, 20 - i * 1.5);
+                glEnd();
+
+        }
+    glEndList();
+}
 void ChangeSize(GLsizei w, GLsizei h) {
     if (h == 0)
         h = 1;
@@ -126,7 +155,7 @@ void ChangeSize(GLsizei w, GLsizei h) {
     glViewport(0, 0, (GLsizei)w, (GLsizei)h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(110, (GLdouble)w/h, 1, 100);
+    gluPerspective(120, (GLdouble)w/h, 1, 100);
     glMatrixMode(GL_MODELVIEW);
     glViewport(0, 0, (GLdouble)w, (GLdouble)h);
 
@@ -145,6 +174,10 @@ void glutNormalKeys(unsigned char key, int x, int y)
 {
     switch(key)
     {
+        case 'c':
+            cube_flag = !cube_flag;
+            std::cout << cube_flag << std::endl;
+            break;
 		case 'x':
 			visibility = !visibility;
 			
@@ -204,6 +237,9 @@ int main(int argc,char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
     glutCreateWindow("Octahedron");
+    cube = glGenLists(1);
+    draw_cube();
+    std::cout << "cube"<< std::endl;
     glutDisplayFunc(Draw);
     glutReshapeFunc(ChangeSize);
     glutTimerFunc(5, TimerFunction, 0.5);
